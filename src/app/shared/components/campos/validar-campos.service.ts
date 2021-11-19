@@ -14,13 +14,8 @@ export class ValidarCamposService {
     }
     return false;
   }
-
-
-
   // método para simplificar as repetições de erro no HTML
   hasError(control: AbstractControl, errorName: string): boolean {
     return control.hasError(errorName);
   }
-
-  
 }
