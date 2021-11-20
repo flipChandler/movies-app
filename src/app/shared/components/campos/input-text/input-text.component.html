@@ -4,16 +4,17 @@
     <input matInput 
            [placeholder]="titulo" 
            [name]="controlName" 
-           [formControlName]="controlName">
+           [formControlName]="controlName"
+           >
 
     <mat-error *ngIf="validaCamposSvc.hasErrorValidar(formControl, 'required')">
       Campo obrigatório
     </mat-error>
     <mat-error *ngIf="validaCamposSvc.hasErrorValidar(formControl, 'minlength')">
-      Campo precisa ter no mínimo 2 caracteres
+      Campo precisa ter no mínimo {{ validaCamposSvc.lengthValidar(formControl, 'minlength') }} caracteres
     </mat-error>
     <mat-error *ngIf="validaCamposSvc.hasErrorValidar(formControl, 'maxlength')">
-      Campo pode ter no máximo 256 caracteres
+      Campo pode ter no máximo {{ validaCamposSvc.lengthValidar(formControl, 'maxlength') }} caracteres
     </mat-error>
   </mat-form-field>
 

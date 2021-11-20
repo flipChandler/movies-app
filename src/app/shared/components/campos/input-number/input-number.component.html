@@ -15,11 +15,11 @@
         </mat-error>
         <mat-error 
           *ngIf="validaCamposSvc.hasErrorValidar(formControl, 'min')">
-          Campo precisa ter no mínimo o valor 0
+          Campo precisa ter no mínimo o valor {{ validaCamposSvc.lengthValidar(formControl, 'min') }}
         </mat-error>
         <mat-error 
           *ngIf="validaCamposSvc.hasErrorValidar(formControl, 'max')">
-          Campo pode ter no máximo o valor 10
+          Campo pode ter no máximo o valor {{ validaCamposSvc.lengthValidar(formControl, 'max') }}
         </mat-error>
       </mat-form-field>  
 </div>
