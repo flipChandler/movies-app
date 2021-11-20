@@ -14,7 +14,6 @@ import { RodapeComponent } from './shared/components/rodape/rodape.component';
 import { FilmesModule } from './filmes/filmes.module';
 import { HttpClientModule } from '@angular/common/http';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,7 +27,7 @@ import { HttpClientModule } from '@angular/common/http';
     MaterialModule,
     AppRoutingModule,
     FilmesModule,
-    HttpClientModule
+    HttpClientModule,    
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt' }],
   bootstrap: [AppComponent]

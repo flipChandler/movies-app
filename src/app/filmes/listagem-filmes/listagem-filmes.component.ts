@@ -9,15 +9,25 @@ import { Filme } from '../../shared/models/filme.model';
 })
 export class ListagemFilmesComponent implements OnInit {
 
+  readonly qtdPagina = 4;
+  pagina = 0;
   filmes: Filme[] = [];
-  fotos: any = [];
+
   constructor(private filmeSvc: FilmeService) { }
 
-  async ngOnInit() {
-    await this.filmeSvc.listar().subscribe((response: Filme[]) => {
-      this.filmes = response;
-      this.fotos = this.filmes.map(f => f.urlFoto);
-      console.log(this.fotos);
+  ngOnInit() {
+      this.listarFilmes();
+  }
+
+  onScroll() {
+    this.listarFilmes();
+  }
+
+  // ... para concatenar 2 arrrays (spread operator) | filmes esperava apenas 1 filme
+  private listarFilmes(): void {
+    this.pagina++;
+    this.filmeSvc.listar(this.pagina, this.qtdPagina).subscribe((response: Filme[]) => {
+      this.filmes.push(...response);
     });
   }
 }
