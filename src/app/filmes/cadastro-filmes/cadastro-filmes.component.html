@@ -37,33 +37,16 @@
                             controlName="descricao">
         </dio-input-textarea>
         
-        <mat-form-field class="full-width">
-          <input matInput
-                 required 
-                 type="number"
-                 min="0"
-                 max="10"
-                 step="0.1"
-                 placeholder="Nota IMDb"
-            name="nota" formControlName="nota">
-          
-          <mat-error 
-            *ngIf="validaCamposSvc.hasErrorValidar(f.nota, 'required')">
-            Campo obrigatório
-          </mat-error>
-          <mat-error 
-            *ngIf="validaCamposSvc.hasErrorValidar(f.nota, 'min')">
-            Campo precisa ter no mínimo o valor 0
-          </mat-error>
-          <mat-error 
-            *ngIf="validaCamposSvc.hasErrorValidar(f.nota, 'max')">
-            Campo pode ter no máximo o valor 10
-          </mat-error>
-        </mat-form-field>        
+        <dio-input-number [formGroup]="cadastro"
+                          titulo="Nota IMDb"         
+                          controlName="nota"
+                          step="0.1">
+        </dio-input-number>
+              
           
         <dio-input-text [formGroup]="cadastro"
-                            titulo="Link IMDb"         
-                            controlName="urlIMDb">
+                        titulo="Link IMDb"         
+                        controlName="urlIMDb">
         </dio-input-text>
         
         
