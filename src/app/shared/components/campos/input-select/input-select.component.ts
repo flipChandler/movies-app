@@ -12,6 +12,7 @@ export class InputSelectComponent {
   @Input() titulo: string;
   @Input() formGroup: FormGroup;
   @Input() controlName: string;
+  @Input() opcoes: Array<string>; // vira uma propriedade one-way-data-bind do component, [opcoes]
 
   constructor(public validaCamposSvc: ValidarCamposService) { }
 
