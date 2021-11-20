@@ -6,6 +6,7 @@
 $default-theme-primary: mat-palette($mat-cyan, 500, 100, 900);
 $default-theme-accent: mat-palette($mat-orange, 800, 300, 200);
 $default-theme-warn: mat-palette($mat-red, A700);
+$default-theme-success: mat-palette($mat-blue, A700);
 
 // create theme (use mat-dark-theme for themes with dark backgrounds)
 $default-theme: mat-dark-theme(

@@ -6,7 +6,8 @@
         
         <dio-input-text [formGroup]="cadastro"
                         titulo="Título"                        
-                        controlName="titulo">
+                        controlName="titulo"
+                        >
         </dio-input-text>
         
         <dio-input-text [formGroup]="cadastro"
@@ -14,23 +15,10 @@
                         controlName="urlFoto">
         </dio-input-text>
 
-        <mat-form-field class="full-width">
-          <input matInput 
-                 readonly 
-                 required
-                 [matDatepicker]="picker" 
-                 placeholder="Data de Lançamento"
-                 name="dtLancamento" 
-                 formControlName="dtLancamento"
-                 (click)="picker.open()">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          
-          <mat-error 
-            *ngIf="validaCamposSvc.hasErrorValidar(f.dtLancamento, 'required')">
-            Campo obrigatório
-          </mat-error>
-        </mat-form-field>
+        <dio-input-date [formGroup]="cadastro"
+                        titulo="Data de Lançamento"         
+                        controlName="dtLancamento">
+        </dio-input-date>
         
         <dio-input-textarea [formGroup]="cadastro"
                             titulo="Descrição"         
@@ -48,21 +36,14 @@
                         titulo="Link IMDb"         
                         controlName="urlIMDb">
         </dio-input-text>
+
+        <dio-input-select [formGroup]="cadastro"
+                        titulo="Genêro"         
+                        controlName="genero">
+        </dio-input-select>
         
         
-        <mat-form-field class="full-width">
-          <mat-select placeholder="Gênero" formControlName="genero" required>
-            <mat-option value="Ação">Açao</mat-option>
-            <mat-option value="Aventura">Aventura</mat-option>
-            <mat-option value="Ficção Científica">Ficção Científica</mat-option>
-            <mat-option value="Romance">Romance</mat-option>
-            <mat-option value="Terror">Terror</mat-option>
-          </mat-select>
-          <mat-error 
-            *ngIf="validaCamposSvc.hasErrorValidar(f.genero, 'required')">
-            Campo obrigatório
-          </mat-error>
-        </mat-form-field>
+        
       </mat-card-content>
 
       <mat-card-actions>
