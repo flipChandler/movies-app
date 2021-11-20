@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { ValidarCamposService } from 'src/app/shared/components/campos/validar-campos.service';
+import { FilmeService } from '../../services/filme.service';
+import { Filme } from '../../shared/models/filme.model';
 
 @Component({
   selector: 'dio-cadastro-filmes',
@@ -11,9 +13,11 @@ export class CadastroFilmesComponent implements OnInit {
 
   cadastro: FormGroup;
   generos: Array<string>;
+  filme: Filme;
 
   constructor(public validaCamposSvc: ValidarCamposService, 
-              private fb: FormBuilder) { }
+              private fb: FormBuilder,
+              private filmeSvc: FilmeService) { }
 
   get f() {
     return this.cadastro.controls;
@@ -50,6 +54,10 @@ export class CadastroFilmesComponent implements OnInit {
     }
     const valor = JSON.stringify(this.cadastro.value, null, 4);
     alert(`SUCESSO!!\n\n ${valor} `);
+    this.filmeSvc.salvar(this.cadastro.value).subscribe((response: Filme) => {
+      this.filme = response;
+      console.log(this.filme);
+    });
   }
 
   reiniciarForm(): void {
