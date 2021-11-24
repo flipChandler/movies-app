@@ -4,6 +4,7 @@ import { FilmeService } from '../../services/filme.service';
 import { Filme } from '../../shared/models/filme.model';
 import { ConfigParams } from '../../shared/models/config-params';
 import { debounceTime } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'dio-listagem-filmes',
@@ -22,7 +23,8 @@ export class ListagemFilmesComponent implements OnInit {
   filtroListagem: FormGroup;
   
   constructor(private filmeSvc: FilmeService,
-              private fb: FormBuilder) { }
+              private fb: FormBuilder,
+              private router: Router) { }
 
   ngOnInit() {
       this.listarFilmes();
@@ -33,12 +35,8 @@ export class ListagemFilmesComponent implements OnInit {
     this.listarFilmes();
   }
 
-  // ... para concatenar 2 arrrays (spread operator) | filmes esperava apenas 1 filme
-  private listarFilmes(): void {
-    this.params.pagina++;
-    this.filmeSvc.listar(this.params).subscribe((response: Filme[]) => {
-      this.filmes.push(...response);
-    });
+  abrir(id: number): void {
+    this.router.navigateByUrl(`/filmes/${id}`);
   }
 
   buildForm() {
@@ -55,7 +53,6 @@ export class ListagemFilmesComponent implements OnInit {
       this.params.pesquisa = value;
       this.resetarConsulta();
     });
-
 
     this.filtroListagem.get('genero').valueChanges.subscribe((value: string) => {
       this.params.campo = { tipo: 'genero', valor: value};
@@ -78,4 +75,12 @@ export class ListagemFilmesComponent implements OnInit {
     this.filmes = [];
     this.listarFilmes();
   }
+
+  // ... para concatenar 2 arrrays (spread operator) | filmes esperava apenas 1 filme
+  private listarFilmes(): void {
+    this.params.pagina++;
+    this.filmeSvc.listar(this.params).subscribe((response: Filme[]) => {
+      this.filmes.push(...response);
+    });
+  }  
 }
