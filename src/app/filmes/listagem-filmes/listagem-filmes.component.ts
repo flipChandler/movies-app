@@ -15,6 +15,11 @@ export class ListagemFilmesComponent implements OnInit {
   generos: Array<string>;
   filmes: Filme[] = [];
   filtroListagem: FormGroup;
+  filtro = {
+    texto: '',
+    genero: ''
+  };
+
 
   constructor(private filmeSvc: FilmeService,
               private fb: FormBuilder) { }
@@ -31,7 +36,7 @@ export class ListagemFilmesComponent implements OnInit {
   // ... para concatenar 2 arrrays (spread operator) | filmes esperava apenas 1 filme
   private listarFilmes(): void {
     this.pagina++;
-    this.filmeSvc.listar(this.pagina, this.qtdPagina).subscribe((response: Filme[]) => {
+    this.filmeSvc.listar(this.pagina, this.qtdPagina, this.filtro).subscribe((response: Filme[]) => {
       this.filmes.push(...response);
     });
   }
@@ -40,6 +45,18 @@ export class ListagemFilmesComponent implements OnInit {
     this.filtroListagem = this.fb.group({
       texto: [''],
       genero: ['']
+    });
+
+    // pega cada alteração em no input-text texto
+    this.filtroListagem.get('texto').valueChanges.subscribe((value: string) => {
+      this.filtro.texto = value;
+      this.resetarConsulta();
+    });
+
+
+    this.filtroListagem.get('genero').valueChanges.subscribe((value: string) => {
+      this.filtro.genero = value;
+      this.resetarConsulta();
     });
 
     this.generos = [
@@ -51,5 +68,11 @@ export class ListagemFilmesComponent implements OnInit {
       'Comédia',
       'Drama'
     ];
+  }
+
+  resetarConsulta(): void {
+    this.pagina = 0;
+    this.filmes = [];
+    this.listarFilmes();
   }
 }

@@ -17,10 +17,19 @@ export class FilmeService {
   }
 
   // _page e _limit = params esperados na url para o json-server
-  listar(pagina: number, qtdPagina: number): Observable<Filme[]> {
+  listar(pagina: number, qtdPagina: number, filtro: any): Observable<Filme[]> {
     let httpParams = new HttpParams();
     httpParams = httpParams.set('_page', pagina.toString());
     httpParams = httpParams.set('_limit', qtdPagina.toString());
+    httpParams = httpParams.set('_sort', 'id');
+    httpParams = httpParams.set('_order', 'desc');
+    if (filtro.texto) {
+      httpParams = httpParams.set('q', filtro.texto); // q = full-text
+    }
+    if (filtro.genero) {
+      httpParams = httpParams.set('genero', filtro.genero);
+    }
+
     return this.http.get<Filme[]>(url, {params: httpParams});
   }
 }
