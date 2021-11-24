@@ -6,6 +6,7 @@ import { ValidarCamposService } from 'src/app/shared/components/campos/validar-c
 import { FilmeService } from '../../services/filme.service';
 import { Filme } from '../../shared/models/filme.model';
 import { Alerta } from '../../shared/models/alerta';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'dio-cadastro-filmes',
@@ -21,7 +22,8 @@ export class CadastroFilmesComponent implements OnInit {
   constructor(public validaCamposSvc: ValidarCamposService, 
               public dialog: MatDialog,
               private fb: FormBuilder,
-              private filmeSvc: FilmeService) { }
+              private filmeSvc: FilmeService,
+              private router: Router) { }
 
   get f() {
     return this.cadastro.controls;
@@ -48,7 +50,15 @@ export class CadastroFilmesComponent implements OnInit {
       this.displayModal(config);
     },
     () => {
-      alert('Erro ao salvar');
+      const config = {
+        data: {
+          titulo: 'Erro ao salvar o registro!',
+          descricao: 'Não conseguimos salvar seu registro. Por favor tente mais tarde!',
+          corBtnSucesso: 'warn',
+          btnSucesso: 'Fechar',
+        } as Alerta
+      };
+      this.displayModal(config);
     });
   }
 
@@ -57,7 +67,14 @@ export class CadastroFilmesComponent implements OnInit {
   }
 
   displayModal(config: any) {
-    this.dialog.open(AlertaComponent, config);
+    const dialogRef = this.dialog.open(AlertaComponent, config);
+    dialogRef.afterClosed().subscribe((opcao: boolean) => {
+      if (opcao) {
+        this.router.navigateByUrl('filmes');
+      } else {
+        this.reiniciarForm();
+      }
+    });
   }
 
   buildForm() {
