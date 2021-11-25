@@ -27,8 +27,8 @@ export class ListagemFilmesComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit() {
-      this.listarFilmes();
-      this.buildForm();
+    this.buildForm();
+    this.listarFilmes();
   }
 
   onScroll() {
