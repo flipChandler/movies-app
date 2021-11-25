@@ -29,14 +29,14 @@ const routes: Routes = [
           {
             path: ':id',
             component: CadastroFilmesComponent,
-          }        
+          }
         ]
       },
       {
         path: ':id',
         component: VisualizarFilmesComponent,
         pathMatch: 'full'
-      }      
+      }
     ]
   },
   { path: '**', redirectTo: 'filmes' },

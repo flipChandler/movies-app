@@ -29,6 +29,10 @@ export class FilmeService {
     return this.http.get<Filme>(`${url}${id}`);
   }
 
+  editar(filme: Filme): Observable<Filme> {
+    return this.http.put<Filme>(`${url} ${filme.id}`, filme);
+  }
+
   excluir(id: number): Observable<void> {
     return this.http.delete<void>(`${url}${id}`);
   }

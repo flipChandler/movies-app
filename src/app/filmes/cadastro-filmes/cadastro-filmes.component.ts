@@ -6,7 +6,7 @@ import { ValidarCamposService } from 'src/app/shared/components/campos/validar-c
 import { FilmeService } from '../../services/filme.service';
 import { Filme } from '../../shared/models/filme.model';
 import { Alerta } from '../../shared/models/alerta';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'dio-cadastro-filmes',
@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 })
 export class CadastroFilmesComponent implements OnInit {
 
+  id: number;
   cadastro: FormGroup;
   generos: Array<string>;
   filme: Filme;
@@ -23,22 +24,49 @@ export class CadastroFilmesComponent implements OnInit {
               public dialog: MatDialog,
               private fb: FormBuilder,
               private filmeSvc: FilmeService,
-              private router: Router) { }
+              private router: Router,
+              private activatedRoute: ActivatedRoute) { }
 
   get f() {
     return this.cadastro.controls;
   }
 
   ngOnInit() {
-    this.buildForm();
+    this.id = this.activatedRoute.snapshot.params['id'];
+    if (this.id) {
+      this.filmeSvc.visualizar(this.id).subscribe(( response: Filme) => {
+        this.buildForm(response);
+      });
+    } else {
+      this.buildForm(this.criarFilmeEmBranco());
+    }
+    this.generos = [
+      'Ação',
+      'Romance',
+      'Aventura',
+      'Terror',
+      'Ficção Científica',
+      'Comédia',
+      'Drama'
+    ];
   }
 
-  salvar(): void {
+  submit(): void {
     this.cadastro.markAllAsTouched();
     if (this.cadastro.invalid) {
       return;
     }
-    this.filmeSvc.salvar(this.cadastro.value).subscribe((response: Filme) => {
+    const filme = this.cadastro.getRawValue() as Filme;
+    if (this.id) {
+      filme.id = this.id;
+      this.editar(filme);
+    } else {
+      this.salvar(filme);
+    }
+  }
+
+  salvar(filme: Filme): void {
+    this.filmeSvc.salvar(filme).subscribe((response: Filme) => {
       const config = {
         data: {
           btnSucesso: 'Ir para listagem',
@@ -62,6 +90,32 @@ export class CadastroFilmesComponent implements OnInit {
     });
   }
 
+  private editar(filme: Filme): void {
+    this.filmeSvc.editar(filme).subscribe(() => {
+      const config = {
+        data: {
+          descricao: 'Seu registro foi atualizado com sucesso!',
+          btnSucesso: 'Ir para a listagem',
+        } as Alerta
+      };
+      const dialogRef = this.dialog.open(AlertaComponent, config);
+      dialogRef.afterClosed().subscribe(() => {
+        this.router.navigateByUrl('filmes');
+      });
+    },
+    () => {
+      const config = {
+        data: {
+          titulo: 'Erro ao editar o registro!',
+          descricao: 'Não conseguimos editar seu registro, favor tentar novamente mais tarde',
+          corBtnSucesso: 'warn',
+          btnSucesso: 'Fechar'
+        } as Alerta
+      };
+      this.dialog.open(AlertaComponent, config);
+    });
+  }
+
   reiniciarForm(): void {
     this.cadastro.reset();
   }
@@ -77,25 +131,28 @@ export class CadastroFilmesComponent implements OnInit {
     });
   }
 
-  buildForm() {
+  buildForm(filme: Filme) {
     this.cadastro = this.fb.group({
-      titulo: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(256)]],
-      urlFoto: ['', [Validators.minLength(10)]],
-      dtLancamento: ['', [Validators.required]],
-      descricao: [''],
-      nota: [0, [Validators.required, Validators.min(0), Validators.max(10)]],
-      urlIMDb: ['', [Validators.minLength(10)]],
-      genero: ['', [Validators.required]]
-    });
+      titulo: [filme.titulo, [Validators.required, Validators.minLength(2), Validators.maxLength(256)]],
+      urlFoto: [filme.urlFoto, [Validators.minLength(10)]],
+      dtLancamento: [filme.dtLancamento, [Validators.required]],
+      descricao: [filme.descricao],
+      nota: [filme.nota, [Validators.required, Validators.min(0), Validators.max(10)]],
+      urlIMDb: [filme.urlIMDb, [Validators.minLength(10)]],
+      genero: [filme.genero, [Validators.required]]
+    });    
+  }
 
-    this.generos = [
-      'Ação',
-      'Romance',
-      'Aventura',
-      'Terror',
-      'Ficção Científica',
-      'Comédia',
-      'Drama'
-    ];
+  private criarFilmeEmBranco(): Filme {
+    return {
+      id: null,
+      titulo: null,
+      dtLancamento: null,
+      urlFoto: null,
+      descricao: null,
+      nota: null,
+      urlImdb: null,
+      genero: null
+    } as Filme;
   }
 }
